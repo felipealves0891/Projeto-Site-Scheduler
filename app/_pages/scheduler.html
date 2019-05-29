@@ -1,0 +1,72 @@
+<!DOCTYPE html5>
+<html ng-app="scheduler">
+    <head>
+        <meta charset="UTF-8" />
+        <title>scheduler</title>
+        <link rel="stylesheet" href="../_css/style.css"/>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="../_js/angular.min.js"></script>
+        <script src="../_js/scheduler.js"></script>
+    </head>
+    <body ng-controller="schedulerCtrl">
+        <div class="container">
+            <div class="row form-group">
+                <div class="col">
+                    <input class="form-control" ng-model="criterioDeBusca" placeholder="O que você está procurando?">
+                </div>
+            </div>
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col" class="text-center">#</th>
+                        <th scope="col" class="text-center">Nome</th>
+                        <th scope="col" class="text-center">Reagendar</th>
+                        <th scope="col" class="text-center">Intervalo</th>
+                        <th scope="col" class="text-center">Data Criado</th>
+                        <th scope="col" class="text-center">Data Agend.</th>
+                        <th scope="col" class="text-center">Selecionar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="scheduling in schedules  | filter: criterioDeBusca track by scheduling.name | orderBy: 'identifier'">
+                        <td class="text-center">{{scheduling.identifier}}</td>
+                        <td class="text-center">{{scheduling.name}}</td>
+                        <td class="text-center"><input type="checkbox" class="form-check-input" ng-model="scheduling.reschedule"></td>
+                        <td class="text-center">{{scheduling.interval | date: 'HH:mm'}}</td>
+                        <td class="text-center">{{scheduling.created | date: 'dd/MM/yyyy HH:mm'}}</td>
+                        <td class="text-center">{{scheduling.schedulingDate | date: 'dd/MM/yyyy HH:mm'}}</td>
+                        <td class="text-center"><input type="checkbox" class="form-check-input" ng-model="scheduling.selected"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <form class="container form-inline">
+                <div class="form-group">
+                    <label for="txtNome">Nome: &nbsp;</label>
+                    <input type="text" id="txtNome" ng-model="register.name" class="form-control" placeholder="Nome">
+                    <small id="ajudaNome" class="text-muted"></small>
+                </div>
+                <div class="form-group">
+                    <label for="txtIntervalo">Intervalo: &nbsp;</label>
+                    <input type="time" id="txtIntervalo" ng-model="register.interval" class="form-control">
+                    <small id="ajudaIntervalo" class="text-muted"></small>
+                </div>
+                <div  class="form-group">
+                    <button type="button" id="btnSalvar" class="btn btn-primary btn-block" ng-disabled="!register.name || !register.interval" ng-click="saveScheduling(register)">
+                        <span>Salvar</span>
+                    </button>
+                </div>
+                <div  class="form-group">
+                    <button type="button" id="btnReagendar" class="btn btn-warning btn-block" ng-disabled="!isReschedule()" ng-click="reschedule()">
+                        <span>Reagendar</span>
+                    </button>
+                </div>
+                <div  class="form-group">
+                    <button type="button" id="btnExcluir" class="btn btn-danger btn-block" ng-disabled="!isSelectedSchedule()" ng-click="deleteScheduling()">
+                        <span>Excluir</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
